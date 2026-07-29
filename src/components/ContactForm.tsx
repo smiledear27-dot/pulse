@@ -31,7 +31,6 @@ export default function ContactForm() {
     setName('');
     setEmail('');
     setMessage('');
-    // notify sibling list to refresh
     window.dispatchEvent(new CustomEvent('contacts:updated'));
   };
 
@@ -41,11 +40,11 @@ export default function ContactForm() {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="rounded-2xl glass p-6 sm:p-8"
+      transition={{ duration: 0.5 }}
+      className="rounded-2xl border border-navy-100 bg-canvas p-6 shadow-card sm:p-8"
     >
-      <h3 className="font-display text-2xl font-bold text-white">Start a conversation</h3>
-      <p className="mt-2 text-sm text-gray-400">
+      <h3 className="font-serif text-2xl font-bold text-navy-900">Start a conversation</h3>
+      <p className="mt-2 text-sm text-navy-500">
         Tell us about your goals — we'll reply within one business day.
       </p>
 
@@ -77,7 +76,7 @@ export default function ContactForm() {
             required
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="What are you trying to grow?"
+            placeholder="What are you trying to achieve?"
             rows={4}
             className={`${inputCls} resize-none`}
           />
@@ -87,7 +86,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-secondary px-6 py-3.5 text-sm font-semibold text-base transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gold-gradient px-6 py-3.5 text-sm font-semibold text-navy-900 shadow-gold transition-all duration-200 hover:scale-[1.02] hover:shadow-lift disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
       >
         {status === 'submitting' ? (
           <>
@@ -106,10 +105,10 @@ export default function ContactForm() {
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+          className="mt-4 flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
         >
           <CheckCircle2 className="h-4 w-4" />
-          Thanks! Your message has been received.
+          Thank you. Your message has been received.
         </motion.div>
       )}
 
@@ -117,7 +116,7 @@ export default function ContactForm() {
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-4 flex items-center gap-2 rounded-xl border border-secondary/40 bg-secondary/10 px-4 py-3 text-sm text-secondary"
+          className="mt-4 flex items-center gap-2 rounded-lg border border-crimson-200 bg-crimson-50 px-4 py-3 text-sm text-crimson-700"
         >
           <AlertCircle className="h-4 w-4" />
           {errorMsg}
@@ -128,12 +127,12 @@ export default function ContactForm() {
 }
 
 const inputCls =
-  'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-500 transition-colors focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20';
+  'w-full rounded-lg border border-navy-100 bg-white px-4 py-3 text-sm text-navy-900 placeholder:text-navy-300 transition-all focus:border-gold-500 focus:outline-none focus:ring-4 focus:ring-gold-100';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-400">
+      <span className="mb-2 block text-xs font-medium uppercase tracking-wider text-navy-400">
         {label}
       </span>
       {children}

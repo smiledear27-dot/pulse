@@ -6,16 +6,15 @@ type Stat = {
   value: number;
   prefix?: string;
   suffix?: string;
-  decimals?: number;
 };
 
 const stats: Stat[] = [
   { label: 'Projects Delivered', value: 847, suffix: '+' },
-  { label: 'Happy Clients', value: 320, suffix: '+' },
-  { label: 'Revenue Generated', value: 50, prefix: '$', suffix: 'M+' },
+  { label: 'Client Satisfaction', value: 98, suffix: '%' },
+  { label: 'Global Clients', value: 320, suffix: '+' },
 ];
 
-function useCountUp(target: number, run: boolean, duration = 1800, decimals = 0) {
+function useCountUp(target: number, run: boolean, duration = 1700) {
   const [val, setVal] = useState(0);
   useEffect(() => {
     if (!run) return;
@@ -23,7 +22,6 @@ function useCountUp(target: number, run: boolean, duration = 1800, decimals = 0)
     const start = performance.now();
     const tick = (now: number) => {
       const p = Math.min((now - start) / duration, 1);
-      // easeOutExpo for a satisfying settle
       const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
       setVal(target * eased);
       if (p < 1) raf = requestAnimationFrame(tick);
@@ -31,30 +29,27 @@ function useCountUp(target: number, run: boolean, duration = 1800, decimals = 0)
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [target, run, duration]);
-  return decimals === 0 ? Math.round(val).toString() : val.toFixed(decimals);
+  return Math.round(val).toString();
 }
 
 function StatCard({ stat, index, run }: { stat: Stat; index: number; run: boolean }) {
-  const display = useCountUp(stat.value, run, 1800, stat.decimals ?? 0);
+  const display = useCountUp(stat.value, run);
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={run ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.12 }}
-      className="group relative overflow-hidden rounded-2xl glass p-8 text-center sm:p-10"
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="group relative overflow-hidden rounded-2xl border border-navy-100 bg-white p-8 text-center shadow-card transition-shadow duration-300 hover:shadow-cardHover sm:p-10"
     >
-      <div className="pointer-events-none absolute inset-x-0 -top-px mx-auto h-px w-2/3 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-      <div className="font-display text-4xl font-bold tracking-tight text-white sm:text-5xl">
-        <span className="text-gradient">
-          {stat.prefix}
-          {display}
-          {stat.suffix}
-        </span>
+      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-px w-12 bg-gold-500 transition-all duration-300 group-hover:w-24" />
+      <div className="font-serif text-5xl font-bold tracking-tight text-navy-900 sm:text-6xl">
+        {stat.prefix}
+        {display}
+        {stat.suffix}
       </div>
-      <div className="mt-3 text-sm font-medium uppercase tracking-widest text-gray-400">
+      <div className="mt-3 text-sm font-medium uppercase tracking-widest text-navy-400">
         {stat.label}
       </div>
-      <div className="pointer-events-none absolute -bottom-12 -right-12 h-32 w-32 rounded-full bg-primary/10 blur-2xl transition-opacity duration-500 group-hover:opacity-100 opacity-0" />
     </motion.div>
   );
 }
@@ -64,25 +59,24 @@ export default function Stats() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="stats" className="relative bg-base py-20 sm:py-28">
-      <div className="absolute inset-0 bg-radial-glow opacity-60" />
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+    <section id="stats" className="bg-canvas py-20 sm:py-28">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 20 }}
-          animate={ inView ? { opacity: 1, y: 0 } : {} }
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-14 text-center"
         >
-          <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Numbers that <span className="text-gradient">speak louder</span> than promises
+          <span className="text-sm font-semibold uppercase tracking-widest text-gold-600">
+            By the numbers
+          </span>
+          <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-navy-900 sm:text-4xl">
+            A track record of <span className="text-gold-500">excellence</span>
           </h2>
-          <p className="mt-4 text-gray-400">
-            Real outcomes for real brands — measured, not promised.
-          </p>
         </motion.div>
 
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-3">
           {stats.map((s, i) => (
             <StatCard key={s.label} stat={s} index={i} run={inView} />
           ))}
